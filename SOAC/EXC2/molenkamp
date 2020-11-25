@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Nov 25 14:01:42 2020
+
+@author: ivo
+"""
+
+    #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Nov 25 10:25:58 2020
+
+@author: ivo
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+time = 250. * 1e3 # s 
+del_t = 2500. # s
+
+L= 2500. * 1e3 # m
+del_x = 25. * 1e3 # m
+
+u_0 = 10. # m/s
+J = 100 
+
+C_0 = 1. # arbitrary
+
+C_grid = np.zeros((int(time/del_t)+1, J))
+C_grid[0,45:56] = C_0
+
+for t_index, t in enumerate(np.arange(0, time, del_t)):
+   
+    for x_index, x in enumerate(np.arange(0, L, del_x)):
+       C_grid[t_index+1, x_index] = -u_0 * (del_t/del_x) * (C_grid[t_index, x_index] - C_grid[t_index, x_index-1]) + C_grid[t_index, x_index]
+
+#%%
+from celluloid import Camera
+
+
+fig = plt.figure()
+camera = Camera(fig)
+for i in range(10):
+    plt.plot([i] * 10)
+    camera.snap()
+animation = camera.animate()

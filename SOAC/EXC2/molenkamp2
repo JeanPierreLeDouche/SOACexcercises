@@ -1,0 +1,56 @@
+    #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Nov 25 10:25:58 2020
+
+@author: ivo
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+
+time = 250. * 1e3 # s 
+del_t = 2500. # s
+
+L= 2500. * 1e3 # m
+del_x = 25. * 1e3 # m
+
+u_0 = 10. # m/s
+J = 100 
+
+C_0 = 1. # arbitrary
+
+C_grid = np.zeros((int(time/del_t)+1, J))
+C_grid[0,45:56] = C_0
+
+for t_index, t in enumerate(np.arange(0, time, del_t)):
+   
+    for x_index, x in enumerate(np.arange(0, L, del_x)):
+       C_grid[t_index+1, x_index] = -u_0 * (del_t/del_x) * (C_grid[t_index, x_index] - C_grid[t_index, x_index-1]) + C_grid[t_index, x_index]
+#%%  
+       
+
+X_grid = np.zeros((C_grid.shape))
+for i in range(X_grid.shape[0]):
+    X_grid[i,:] = np.arange(0,L,del_x)
+
+fig, ax = plt.subplots()
+xdata, ydata = X_grid, C_grid
+ln, = plt.plot(np.arange(0,L,del_x), C_grid[0,:], 'ro')
+
+def init():
+    ax.set_xlim(0, L)
+    ax.set_ylim(-1, 1)
+    return ln,
+
+def update(frame):
+    xdata.append(frame)
+    ydata.append(np.sin(frame))
+    ln.set_data(xdata, ydata)
+    return ln,
+
+ani = FuncAnimation(fig, update, frames=np.linspace(0, 2*np.pi, 128),
+                    init_func=init, blit=True)
+plt.show()
