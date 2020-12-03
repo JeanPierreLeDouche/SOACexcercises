@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import matplotlib.animation as animation
-
+import time as tim
 
 time = 4* 250. * 1e3 # s 
 del_t = 2500. # s
@@ -38,7 +38,6 @@ x = np.arange(0,L,del_x)
     
 #initial line, which are the initial values of eta
 line, = ax.plot(x, C_grid[0,:])
-line2, = ax.plot(x, C_grid[0,:], color = 'red', ls = '-.')
 
 def init():  # only required for bl  itting to give a clean slate.
     line.set_ydata([] * len(x)) #length of the line we want to plot, [] *len(x) will make an empty array[], of lenght x
@@ -48,7 +47,8 @@ def animate(n):
     line.set_ydata(C_grid[n,:])  # update the data.
     ax.set_title('%03d'%(n))
     ax.plot(x, C_grid[0,:], color = 'red', ls = ':')
-    if n = 
+    if n == 101 or n == 201 or n == 301:
+        tim.sleep(1)
     return line,
 
 anim = FuncAnimation(fig, animate, init_func=init,interval=20, blit = False)
